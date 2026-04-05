@@ -69,6 +69,7 @@ body {
   padding: 0;
   height: 100%;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 a {
@@ -933,6 +934,11 @@ select {
   .shell {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
   }
 
   .shell-sidebar {
@@ -992,7 +998,9 @@ select {
   }
 
   .shell-main {
-    min-height: calc(100vh - var(--mobile-brandbar-height));
+    height: calc(100dvh - var(--mobile-brandbar-height));
+    min-height: 0;
+    max-height: calc(100dvh - var(--mobile-brandbar-height));
   }
 
   .shell-mobile-menu-panel {
@@ -1108,7 +1116,7 @@ select {
   .shell-card {
     flex-basis: min(82vw, 314px);
     scroll-snap-align: start;
-    transition: flex-basis 220ms ease;
+    transition: none;
   }
 
   .shell-stage.is-scrolling .shell-card,

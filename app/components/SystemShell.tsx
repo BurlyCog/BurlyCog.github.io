@@ -471,21 +471,12 @@ export default function SystemShell({
   );
 
   const activateMobileCard = useCallback((cardId: string) => {
-    const stage = stageRef.current;
-    const cardNode = cardRefs.current[cardId];
     const cardScroll = cardScrollRefs.current[cardId];
 
     resetDesktopCardInteraction();
     setMobileActiveCardId(cardId);
     setIsMobileMenuOpen(false);
     setIsFilterOpen(false);
-
-    if (stage && cardNode) {
-      stage.scrollTo({
-        left: cardNode.offsetLeft,
-        behavior: "smooth",
-      });
-    }
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -494,17 +485,12 @@ export default function SystemShell({
         const nextCardScroll = cardScrollRefs.current[cardId] ?? cardScroll;
 
         if (nextStage && nextCardNode) {
-          const stageRect = nextStage.getBoundingClientRect();
-          const cardRect = nextCardNode.getBoundingClientRect();
           const maxScrollLeft = Math.max(0, nextStage.scrollWidth - nextStage.clientWidth);
-          const alignedScrollLeft = Math.max(
-            0,
-            Math.min(maxScrollLeft, nextStage.scrollLeft + (cardRect.left - stageRect.left))
-          );
+          const alignedScrollLeft = Math.max(0, Math.min(maxScrollLeft, nextCardNode.offsetLeft));
 
           nextStage.scrollTo({
             left: alignedScrollLeft,
-            behavior: "smooth",
+            behavior: "auto",
           });
         }
 
