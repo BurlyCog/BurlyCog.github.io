@@ -72,6 +72,8 @@ export default function SystemShell({
   const trackpadGestureAxisRef = useRef<"x" | "y" | null>(null);
   const trackpadGestureTotalsRef = useRef({ x: 0, y: 0 });
   const trackpadGestureTimeoutRef = useRef<number | null>(null);
+  const mobileTouchStartRef = useRef<{ cardId: string; x: number; y: number } | null>(null);
+  const mobileTouchDraggingRef = useRef(false);
   const routeSlug = pathname.slice(1) || null;
   const effectivePendingSlug =
     pendingSectionSlug && pendingSectionSlug !== routeSlug ? pendingSectionSlug : null;
@@ -448,6 +450,8 @@ export default function SystemShell({
   const navigateToCard = useCallback(
     (sectionSlug: string, cardId: string) => {
       clearHoverActivationTimeout();
+      commandInputRef.current?.blur();
+      setIsCommandFocused(false);
       setPendingSectionSlug(sectionSlug);
       if (isMobileViewport) {
         resetDesktopCardInteraction();
@@ -1189,8 +1193,49 @@ export default function SystemShell({
                   isMobilePaintingFullscreen ? "is-mobile-painting-fullscreen" : ""
                 }`}
                 data-card-id={card.id}
+                onPointerDown={(event) => {
+                  if (!isMobileViewport || event.pointerType !== "touch") {
+                    return;
+                  }
+
+                  mobileTouchStartRef.current = {
+                    cardId: card.id,
+                    x: event.clientX,
+                    y: event.clientY,
+                  };
+                  mobileTouchDraggingRef.current = false;
+                }}
+                onPointerMove={(event) => {
+                  if (!isMobileViewport || event.pointerType !== "touch") {
+                    return;
+                  }
+
+                  const touchStart = mobileTouchStartRef.current;
+
+                  if (!touchStart || touchStart.cardId !== card.id) {
+                    return;
+                  }
+
+                  if (
+                    Math.abs(event.clientX - touchStart.x) > 10 ||
+                    Math.abs(event.clientY - touchStart.y) > 10
+                  ) {
+                    mobileTouchDraggingRef.current = true;
+                  }
+                }}
+                onPointerCancel={() => {
+                  mobileTouchStartRef.current = null;
+                  mobileTouchDraggingRef.current = false;
+                }}
                 onClick={() => {
                   if (isMobileViewport) {
+                    if (mobileTouchDraggingRef.current) {
+                      mobileTouchStartRef.current = null;
+                      mobileTouchDraggingRef.current = false;
+                      return;
+                    }
+
+                    mobileTouchStartRef.current = null;
                     activateMobileCard(card.id);
                     return;
                   }

@@ -1082,6 +1082,7 @@ select {
 
   .shell-stage {
     touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
   }
 
@@ -1114,6 +1115,21 @@ select {
   }
 
   .shell-card__scroll {
+    overflow-y: hidden;
+    touch-action: pan-x;
+  }
+
+  .shell-card:not(.is-mobile-active) .shell-card__content {
+    pointer-events: none;
+  }
+
+  .shell-card.is-mobile-active .shell-card__content {
+    pointer-events: auto;
+  }
+
+  .shell-card.is-mobile-active .shell-card__scroll,
+  .shell-card.is-mobile-painting-fullscreen .shell-card__scroll {
+    overflow-y: auto;
     touch-action: pan-y;
   }
 

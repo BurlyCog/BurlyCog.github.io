@@ -3,8 +3,6 @@ import SystemShell from "./components/SystemShell";
 import { getCards, getSections } from "./lib/queries";
 import "./globals.css";
 
-export const dynamic = "force-dynamic";
-
 const microgramma = localFont({
   src: "../media/Microgramma-D-Bold-Extended.ttf",
   variable: "--font-ui",
