@@ -494,8 +494,16 @@ export default function SystemShell({
         const nextCardScroll = cardScrollRefs.current[cardId] ?? cardScroll;
 
         if (nextStage && nextCardNode) {
+          const stageRect = nextStage.getBoundingClientRect();
+          const cardRect = nextCardNode.getBoundingClientRect();
+          const maxScrollLeft = Math.max(0, nextStage.scrollWidth - nextStage.clientWidth);
+          const alignedScrollLeft = Math.max(
+            0,
+            Math.min(maxScrollLeft, nextStage.scrollLeft + (cardRect.left - stageRect.left))
+          );
+
           nextStage.scrollTo({
-            left: nextCardNode.offsetLeft,
+            left: alignedScrollLeft,
             behavior: "smooth",
           });
         }

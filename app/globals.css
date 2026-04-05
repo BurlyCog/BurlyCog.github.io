@@ -49,7 +49,8 @@
 }
 
 body {
-  min-height: 100vh;
+  height: 100%;
+  min-height: 100dvh;
   background: var(--bg-1);
   color: var(--text-1);
   font-family: var(--font-ui), "Avenir Next", "Segoe UI", sans-serif;
@@ -66,6 +67,8 @@ html,
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 a {
@@ -84,8 +87,10 @@ select {
   position: relative;
   display: grid;
   grid-template-columns: var(--sidebar-width) 1fr;
-  height: 100vh;
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
   background-color: var(--checker-a);
   background-image:
     linear-gradient(45deg, var(--checker-b) 25%, transparent 25%),
@@ -113,7 +118,7 @@ select {
   position: relative;
   z-index: 1;
   height: 100%;
-  min-height: 100vh;
+  min-height: 100%;
   border-right: 2px solid var(--line);
   background: var(--bg-2);
 }
@@ -208,6 +213,7 @@ select {
   height: 100%;
   min-width: 0;
   min-height: 0;
+  overflow: hidden;
 }
 
 .shell-topbar {
@@ -1007,7 +1013,7 @@ select {
   }
 
   .shell-mobile-menu-panel__inner {
-    height: calc(100vh - var(--mobile-brandbar-height) - var(--topbar-height) - 2px);
+    height: calc(100dvh - var(--mobile-brandbar-height) - var(--topbar-height) - 2px);
     overflow-y: auto;
     padding: 42px 24px 40px;
   }
@@ -1073,7 +1079,7 @@ select {
     right: 0;
     width: 100%;
     min-width: 0;
-    max-height: calc(100vh - var(--mobile-brandbar-height) - var(--topbar-height) - 16px);
+    max-height: calc(100dvh - var(--mobile-brandbar-height) - var(--topbar-height) - 16px);
   }
 
   .shell-filter-panel {
