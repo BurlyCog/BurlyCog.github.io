@@ -666,6 +666,17 @@ select {
     width 220ms ease;
 }
 
+.shell-card__image-trigger {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
 .shell-card--project .shell-card__image-frame {
   aspect-ratio: 1.18 / 1;
 }
@@ -1137,6 +1148,15 @@ select {
     pointer-events: none;
   }
 
+  .shell-card--painting .shell-card__scroll {
+    overflow-y: auto;
+    touch-action: pan-x pan-y;
+  }
+
+  .shell-card--painting .shell-card__content {
+    pointer-events: auto;
+  }
+
   .shell-card.is-mobile-active .shell-card__content {
     pointer-events: auto;
   }
@@ -1150,6 +1170,12 @@ select {
   .shell-stage:not(.is-scrolling) .shell-card--painting:hover .shell-card__image-frame {
     width: 100%;
     margin-inline: 0;
+  }
+
+  .shell-card.is-mobile-active.shell-card--painting:not(.is-mobile-painting-fullscreen)
+    .shell-card__image-frame {
+    width: calc(100% + (var(--card-pad-inline) * 2));
+    margin-inline: calc(var(--card-pad-inline) * -1);
   }
 
   .shell-card.is-mobile-active {
@@ -1241,6 +1267,10 @@ select {
     margin: 0;
     background: var(--bg-1);
     aspect-ratio: auto;
+  }
+
+  .shell-card.is-mobile-painting-fullscreen .shell-card__image-trigger {
+    height: 100%;
   }
 
   .shell-card.is-mobile-painting-fullscreen .shell-card__image {

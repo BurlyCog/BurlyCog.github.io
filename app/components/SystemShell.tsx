@@ -40,6 +40,9 @@ export default function SystemShell({
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mobileActiveCardId, setMobileActiveCardId] = useState<string | null>(null);
+  const [mobilePaintingFullscreenCardId, setMobilePaintingFullscreenCardId] = useState<string | null>(
+    null
+  );
   const [pendingSectionSlug, setPendingSectionSlug] = useState<string | null>(null);
   const [focusedCardId, setFocusedCardId] = useState<string | null>(null);
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
@@ -190,6 +193,10 @@ export default function SystemShell({
   const activeCardIds = useMemo(() => new Set(visibleCards.map((card) => card.id)), [visibleCards]);
   const effectiveMobileActiveCardId =
     mobileActiveCardId && activeCardIds.has(mobileActiveCardId) ? mobileActiveCardId : null;
+  const effectiveMobilePaintingFullscreenCardId =
+    mobilePaintingFullscreenCardId && activeCardIds.has(mobilePaintingFullscreenCardId)
+      ? mobilePaintingFullscreenCardId
+      : null;
   const effectiveFocusedCardId =
     focusedCardId && activeCardIds.has(focusedCardId) ? focusedCardId : null;
   const effectiveExpandedCardId =
@@ -308,6 +315,7 @@ export default function SystemShell({
 
   const resetMobileCardInteraction = useCallback(() => {
     setMobileActiveCardId(null);
+    setMobilePaintingFullscreenCardId(null);
   }, []);
 
   const resetCardInteraction = useCallback(() => {
@@ -341,6 +349,7 @@ export default function SystemShell({
       if (!matches) {
         setIsMobileMenuOpen(false);
         setMobileActiveCardId(null);
+        setMobilePaintingFullscreenCardId(null);
       }
     };
 
@@ -456,6 +465,7 @@ export default function SystemShell({
       if (isMobileViewport) {
         resetDesktopCardInteraction();
         setMobileActiveCardId(cardId);
+        setMobilePaintingFullscreenCardId(null);
       } else {
         setFocusedCardId(cardId);
         setExpandedCardId(cardId);
@@ -475,6 +485,7 @@ export default function SystemShell({
 
     resetDesktopCardInteraction();
     setMobileActiveCardId(cardId);
+    setMobilePaintingFullscreenCardId(null);
     setIsMobileMenuOpen(false);
     setIsFilterOpen(false);
 
@@ -1166,7 +1177,8 @@ export default function SystemShell({
                 const isInteractivelyExpanded = !isMobileViewport && layoutExpandedCardId === card.id;
                 const isMobileActive = isMobileViewport && effectiveMobileActiveCardId === card.id;
                 const isPainting = normalizeTag(card.type ?? "") === "painting";
-                const isMobilePaintingFullscreen = isMobileActive && isPainting;
+                const isMobilePaintingFullscreen =
+                  isPainting && effectiveMobilePaintingFullscreenCardId === card.id;
                 const cardTags = getCardTags(card);
                 const cardPoints = getCardPoints(card);
                 const cardLinks = getCardLinks(card);
@@ -1230,6 +1242,11 @@ export default function SystemShell({
                     }
 
                     mobileTouchStartRef.current = null;
+
+                    if (isMobileActive) {
+                      return;
+                    }
+
                     activateMobileCard(card.id);
                     return;
                   }
@@ -1272,10 +1289,10 @@ export default function SystemShell({
                 <button
                   type="button"
                   className="shell-card__mobile-art-back"
-                  aria-label="Back to cards"
+                  aria-label="Back to artwork card"
                   onClick={(event) => {
                     event.stopPropagation();
-                    resetMobileCardInteraction();
+                    setMobilePaintingFullscreenCardId(null);
                   }}
                 >
                   <Image
@@ -1341,15 +1358,47 @@ export default function SystemShell({
                     ) : null}
 
                     {card.image_url ? (
-                      <div className="shell-card__image-frame">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={card.image_url}
-                          alt={formatCardTitle(card)}
-                          className="shell-card__image"
-                          loading="lazy"
-                        />
-                      </div>
+                      isPainting ? (
+                        <button
+                          type="button"
+                          className="shell-card__image-trigger"
+                          aria-label={
+                            isMobileViewport && isMobileActive && !isMobilePaintingFullscreen
+                              ? `Open ${formatCardTitle(card)} fullscreen`
+                              : formatCardTitle(card)
+                          }
+                          onClick={(event) => {
+                            if (!isMobileViewport) {
+                              return;
+                            }
+
+                            if (isMobileActive && !isMobilePaintingFullscreen) {
+                              event.stopPropagation();
+                              setMobilePaintingFullscreenCardId(card.id);
+                            }
+                          }}
+                        >
+                          <div className="shell-card__image-frame">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={card.image_url}
+                              alt={formatCardTitle(card)}
+                              className="shell-card__image"
+                              loading="lazy"
+                            />
+                          </div>
+                        </button>
+                      ) : (
+                        <div className="shell-card__image-frame">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={card.image_url}
+                            alt={formatCardTitle(card)}
+                            className="shell-card__image"
+                            loading="lazy"
+                          />
+                        </div>
+                      )
                     ) : null}
 
                     <div className="shell-card__body">
