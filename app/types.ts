@@ -25,7 +25,7 @@ export type Card = {
   points?: string[] | null;
   tags?: string[] | null;
 
-  links?: Link[] | null;
+  links?: Link[] | Link | null;
 
   image_url?: string | null;
 

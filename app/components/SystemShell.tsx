@@ -147,15 +147,16 @@ export default function SystemShell({
       );
     }
 
+    const singleLink = !Array.isArray(links) && links && typeof links === "object" ? links : null;
+
     if (
-      links &&
-      typeof links === "object" &&
-      "label" in links &&
-      "url" in links &&
-      typeof links.label === "string" &&
-      typeof links.url === "string"
+      singleLink &&
+      typeof singleLink.label === "string" &&
+      typeof singleLink.url === "string" &&
+      singleLink.label.trim().length > 0 &&
+      singleLink.url.trim().length > 0
     ) {
-      return [{ label: links.label, url: links.url }];
+      return [{ label: singleLink.label, url: singleLink.url }];
     }
 
     return [];
@@ -639,7 +640,7 @@ export default function SystemShell({
           return;
         }
 
-        if (Math.abs(event.deltaY) > 0.5 && canScrollVertically(targetScroll)) {
+        if (targetScroll && Math.abs(event.deltaY) > 0.5 && canScrollVertically(targetScroll)) {
           const cardId = targetScroll.closest(".shell-card")?.getAttribute("data-card-id");
 
           if (cardId) {
