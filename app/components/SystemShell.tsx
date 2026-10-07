@@ -20,7 +20,6 @@ import darkWordmark from "../../media/Dark_SHAIKH MOHAMMED AHMED.svg";
 import wordmark from "../../media/SHAIKH MOHAMMED AHMED.svg";
 import filterIcon from "../../media/filter.svg";
 import moonIcon from "../../media/moon.svg";
-import searchIcon from "../../media/search.svg";
 import sunIcon from "../../media/sun.svg";
 
 type SystemShellProps = {
@@ -52,7 +51,7 @@ export default function SystemShell({
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [activeResultIndex, setActiveResultIndex] = useState(0);
-  const [pressedControl, setPressedControl] = useState<"search" | "filter" | null>(null);
+  const [pressedControl, setPressedControl] = useState<"filter" | null>(null);
   const [commandValue, setCommandValue] = useState("");
   const [caretIndex, setCaretIndex] = useState(0);
   const [caretOffset, setCaretOffset] = useState(0);
@@ -268,6 +267,7 @@ export default function SystemShell({
   const showSearchPanel =
     isCommandFocused &&
     (!!normalizedSearchQuery || effectiveSelectedTags.length > 0 || commandValue.length > 0);
+  const showIdleSearchPrompt = !isCommandFocused && commandValue.length === 0;
   const canScrollVertically = useCallback((element: HTMLDivElement | null) => {
     if (!element) {
       return false;
@@ -935,25 +935,6 @@ export default function SystemShell({
               />
             </button>
             <button
-              type="button"
-              className={`topbar-button ${pressedControl === "search" ? "is-pressed" : ""}`}
-              aria-label="Focus search"
-              onPointerDown={() => {
-                setPressedControl("search");
-              }}
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                focusCommand(true);
-              }}
-            >
-              <Image
-                src={searchIcon}
-                alt=""
-                aria-hidden="true"
-                className="topbar-icon topbar-icon--search"
-              />
-            </button>
-            <button
               ref={filterButtonRef}
               type="button"
               className={`topbar-button ${pressedControl === "filter" ? "is-pressed" : ""}`}
@@ -974,7 +955,9 @@ export default function SystemShell({
               />
             </button>
             <div
-              className={`topbar-command ${isCommandFocused ? "is-focused" : ""}`}
+              className={`topbar-command ${isCommandFocused ? "is-focused" : ""} ${
+                showIdleSearchPrompt ? "is-idle" : ""
+              }`}
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 focusCommand();
@@ -1057,7 +1040,15 @@ export default function SystemShell({
                   className="topbar-command__cursor"
                   aria-hidden="true"
                   style={{ transform: `translate3d(${caretOffset}px, -50%, 0)` }}
-                />
+                >
+                  {showIdleSearchPrompt ? (
+                    <>
+                      search<span className="topbar-command__idle-dot">.</span>
+                      <span className="topbar-command__idle-dot">.</span>
+                      <span className="topbar-command__idle-dot">.</span>
+                    </>
+                  ) : null}
+                </span>
               </div>
             </div>
           </div>

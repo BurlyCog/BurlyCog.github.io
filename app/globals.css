@@ -288,10 +288,6 @@ select {
   display: block;
 }
 
-.topbar-icon--search {
-  width: 14px;
-}
-
 .topbar-icon--filter {
   width: 13px;
 }
@@ -350,16 +346,50 @@ select {
   position: absolute;
   top: 50%;
   left: 0;
+  display: flex;
+  align-items: center;
   width: 10px;
   height: 17px;
   background: var(--text-1);
+  box-sizing: border-box;
+  overflow: hidden;
+  color: var(--bg-1);
   pointer-events: none;
-  transition: transform 140ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    transform 140ms cubic-bezier(0.16, 1, 0.3, 1),
+    width 140ms cubic-bezier(0.16, 1, 0.3, 1);
   animation: cursor-fade-blink 2.1s ease-in-out infinite;
 }
 
 .topbar-command.is-focused .topbar-command__cursor {
   background: var(--accent);
+}
+
+.topbar-command.is-idle .topbar-command__cursor {
+  width: 70px;
+  padding-inline: 3px;
+  font-family: var(--font-sidebar-regular), "Helvetica Neue", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.012em;
+  white-space: nowrap;
+}
+
+.topbar-command__idle-dot {
+  opacity: 0;
+}
+
+.topbar-command__idle-dot:first-of-type {
+  opacity: 1;
+}
+
+.topbar-command__idle-dot:nth-of-type(2) {
+  animation: search-prompt-second-dot 1.5s steps(1, end) infinite;
+}
+
+.topbar-command__idle-dot:nth-of-type(3) {
+  animation: search-prompt-third-dot 1.5s steps(1, end) infinite;
 }
 
 .shell-topbar__status {
@@ -488,6 +518,28 @@ select {
   }
   100% {
     opacity: 0;
+  }
+}
+
+@keyframes search-prompt-second-dot {
+  0%,
+  33% {
+    opacity: 0;
+  }
+  34%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes search-prompt-third-dot {
+  0%,
+  66% {
+    opacity: 0;
+  }
+  67%,
+  100% {
+    opacity: 1;
   }
 }
 
