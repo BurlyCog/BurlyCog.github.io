@@ -23,6 +23,8 @@
   --card-pad-bottom: 32px;
   --card-content-gap: 38px;
   --card-tight-gap: 16px;
+  --card-body-letter-spacing: 0.018em;
+  --card-body-word-spacing: 0.15em;
   --card-index-size: 5.4rem;
   --card-index-line-height: 0.9;
   --card-index-height: calc(var(--card-index-size) * var(--card-index-line-height));
@@ -742,7 +744,8 @@ select {
   font-size: 0.95rem;
   font-weight: 400;
   line-height: 1.18;
-  letter-spacing: -0.012em;
+  letter-spacing: var(--card-body-letter-spacing);
+  word-spacing: var(--card-body-word-spacing);
   color: var(--text-1);
 }
 
@@ -753,7 +756,8 @@ select {
   font-size: 0.92rem;
   font-weight: 400;
   line-height: 1.2;
-  letter-spacing: -0.012em;
+  letter-spacing: var(--card-body-letter-spacing);
+  word-spacing: var(--card-body-word-spacing);
   color: var(--text-2);
 }
 
