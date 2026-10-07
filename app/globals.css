@@ -12,7 +12,7 @@
   --sidebar-width: 222px;
   --sidebar-side-padding: 34px;
   --sidebar-nav-gap: 76px;
-  --topbar-height: 31px;
+  --topbar-height: 48px;
   --scrollbar-height: 17px;
   --checker-size: 44px;
   --empty-space-min: 220px;
@@ -77,6 +77,11 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg-1);
 }
 
 button,
@@ -230,6 +235,7 @@ select {
 
 .shell-topbar__group {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   height: 100%;
   gap: 0;
@@ -240,7 +246,7 @@ select {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 29px;
+  width: var(--topbar-height);
   height: 100%;
   appearance: none;
   border: 0;
@@ -294,9 +300,10 @@ select {
 
 .topbar-command {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   min-width: 0;
-  width: clamp(132px, 26vw, 320px);
+  width: auto;
   height: 100%;
   padding: 0 18px 0 10px;
 }
@@ -350,7 +357,7 @@ select {
   align-items: center;
   width: 10px;
   height: 17px;
-  background: var(--text-1);
+  background: var(--accent);
   box-sizing: border-box;
   overflow: hidden;
   color: var(--bg-1);
@@ -359,10 +366,6 @@ select {
     transform 140ms cubic-bezier(0.16, 1, 0.3, 1),
     width 140ms cubic-bezier(0.16, 1, 0.3, 1);
   animation: cursor-fade-blink 2.1s ease-in-out infinite;
-}
-
-.topbar-command.is-focused .topbar-command__cursor {
-  background: var(--accent);
 }
 
 .topbar-command.is-idle .topbar-command__cursor {
@@ -412,7 +415,7 @@ select {
 }
 
 .shell-search-panel {
-  left: 88px;
+  left: calc((var(--topbar-height) * 2) + 10px);
   width: min(420px, calc(100% - 120px));
   max-height: min(420px, calc(100vh - 120px));
   overflow-y: auto;
@@ -935,7 +938,7 @@ select {
   }
 
   .topbar-button {
-    width: 27px;
+    width: var(--topbar-height);
   }
 
   .topbar-command {
@@ -980,7 +983,7 @@ select {
     --sidebar-width: 100%;
     --sidebar-side-padding: 16px;
     --sidebar-nav-gap: 18px;
-    --topbar-height: 28px;
+    --topbar-height: 42px;
     --scrollbar-height: 15px;
     --checker-size: 34px;
     --card-width: 212px;
